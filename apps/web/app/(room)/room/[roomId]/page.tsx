@@ -1,5 +1,4 @@
-import { ManSVG } from "@repo/ui";
-
+import { Hangman } from "@repo/ui";
 interface IRoom {
   params: {
     roomId: string;
@@ -8,9 +7,9 @@ interface IRoom {
 
 const Room = (props: IRoom) => {
   return (
-    <div>
+    <div style={{ width: "400px", height: "400px" }}>
       room id:{`${props.params.roomId}`}
-      <ManSVG />
+      <Hangman />
     </div>
   );
 };
