@@ -7,4 +7,8 @@ module.exports = {
   parserOptions: {
     project: true,
   },
+  rules: {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+  },
 };
