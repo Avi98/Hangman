@@ -20,6 +20,7 @@
 2. Zustand
 3. Material.ui
 4. Framer motion
+5. Socket.client.io
 
 - _Backend_
 
