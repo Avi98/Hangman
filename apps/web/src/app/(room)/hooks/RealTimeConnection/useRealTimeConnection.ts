@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Socket as SocketType } from "socket.io-client";
+import { useCallback, useEffect, useRef, useState } from "react";
 import RealTimeConnection from "./realtimeConnection";
 
 interface IUseRealTimeConnection {
   isConnected: boolean;
   currentConnectionId: string | null;
+  onKeyPressed: () => void;
 }
 
 type SocketRefType = () => RealTimeConnection;
@@ -46,13 +46,15 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
   }, [connectToWebSocket, disconnectConnection, setIsConnected]);
 
   const sendMessageCb = useCallback(() => {
-    return;
+    if (typeof socketRef.current !== "function")
+      return socketRef.current.sendMessage("key-pressed", {
+        data: "key_pressed event",
+      });
   }, []);
-
-  console.log({ isConnected, connectionId });
 
   return {
     isConnected,
     currentConnectionId: connectionId,
+    onKeyPressed: sendMessageCb,
   };
 };

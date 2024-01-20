@@ -31,21 +31,9 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   onParticipate(@ConnectedSocket() socket: Socket, @MessageBody() data: any) {
     const socketId = socket.id;
     console.log({ serverListern: data });
-
-    setTimeout(() => {
-      console.log('sending emit......', socketId);
-
-      // socket.to(socketId).emit(
-      //   'message',
-      //   {
-      //     data: 'serveer emited data to client',
-      //   },
-      //   (data) => console.log({ dataSEndToClinetAck: data }),
-      // );
-    }, 100);
   }
 
-  @SubscribeMessage('SendOnClick')
+  @SubscribeMessage('key-pressed')
   sendEvent(clinet: Socket, data) {
     console.log({ serverDataOnClick: data });
     clinet.emit('testServerMessage', { data: 'server Message' }, (data) =>
