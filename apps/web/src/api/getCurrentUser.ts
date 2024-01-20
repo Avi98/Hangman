@@ -1,7 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
 import { env } from "../utils/env";
 import { GetAPIBuilder } from "./common/getAPIBuilder";
+import { API_ENDPOINTS } from "./constants";
 
-export const getCurrentUser = () => {
-  const api = new GetAPIBuilder("/user", env.BE_BASE_URL);
-  api.sendRequest();
+const getCurrentUser = () => {
+  const api = new GetAPIBuilder(API_ENDPOINTS.GET_USER, env.BE_BASE_URL);
+  return api.sendRequest();
+};
+
+export const useGetCurrentUser = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: [API_ENDPOINTS.GET_USER],
+    queryFn: getCurrentUser,
+  });
+
+  return { data, isLoading, error };
 };

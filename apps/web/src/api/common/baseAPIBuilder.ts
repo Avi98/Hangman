@@ -4,7 +4,7 @@ export abstract class APIBuilder {
   private customRequestHeaders = {};
 
   constructor(endpoint: string, baseUrl: string) {
-    this.targetUrl = `${baseUrl}/${endpoint}`;
+    this.targetUrl = `${baseUrl}${endpoint}`;
   }
 
   protected async sendRequestAndVerifyResponse(
