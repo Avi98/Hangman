@@ -1,18 +1,19 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-// import {
-//   ConflictException,
-//   ForbiddenException,
-//   NotFoundException,
-// } from '@nestjs/common';
 import { Socket } from 'socket.io';
 
-@WebSocketGateway({ cors: { origin: 'http://localhost:3000' } })
+@WebSocketGateway({
+  //@TODO: extract this
+  cors: { origin: 'http://localhost:3000' },
+  path: '/realtime',
+})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server;
 
@@ -27,19 +28,38 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('message')
-  async onParticipate(socket: Socket) {
+  onParticipate(@ConnectedSocket() socket: Socket, @MessageBody() data: any) {
     const socketId = socket.id;
-    return 'test successfullt';
+    console.log({ serverListern: data });
+
+    setTimeout(() => {
+      console.log('sending emit......', socketId);
+
+      // socket.to(socketId).emit(
+      //   'message',
+      //   {
+      //     data: 'serveer emited data to client',
+      //   },
+      //   (data) => console.log({ dataSEndToClinetAck: data }),
+      // );
+    }, 100);
   }
 
-  @SubscribeMessage('exchanges')
-  async onMessage(socket: Socket, message: any) {
-    const socketId = socket.id;
-    message.socketId = socketId;
-    console.log(
-      'Received new message... socketId: %s, message: ',
-      socketId,
-      message,
+  @SubscribeMessage('SendOnClick')
+  sendEvent(clinet: Socket, data) {
+    console.log({ serverDataOnClick: data });
+    clinet.emit('testServerMessage', { data: 'server Message' }, (data) =>
+      console.log({ sent: data }),
     );
   }
+  // @SubscribeMessage('exchanges')
+  // async onMessage(socket: Socket, message: any) {
+  //   const socketId = socket.id;
+  //   message.socketId = socketId;
+  //   console.log(
+  //     'Received new message... socketId: %s, message: ',
+  //     socketId,
+  //     message,
+  //   );
+  // }
 }
