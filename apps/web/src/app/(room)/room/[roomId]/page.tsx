@@ -1,4 +1,5 @@
-import { GameRoom } from "../../components/GameRoom";
+import { GameRoom } from "../../components/room";
+
 interface IRoom {
   params: {
     roomId: string;

@@ -28,6 +28,7 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
     if (typeof socketRef.current !== "function") {
       await socketRef.current.establishConnection();
       setConnectionId(socketRef.current.getConnectionId() ?? "");
+      setIsConnected(socketRef.current.getIsConnected());
     }
   }, []);
 
@@ -42,7 +43,9 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
     socketRef.current = socket;
     if (!isConnected) connectToWebSocket();
 
-    // return () => disconnectConnection();
+    return () => {
+      if (isConnected) disconnectConnection();
+    };
   }, [connectToWebSocket, disconnectConnection, setIsConnected]);
 
   const sendMessageCb = useCallback(() => {
@@ -52,6 +55,7 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
       });
   }, []);
 
+  console.log({ isConnected });
   return {
     isConnected,
     currentConnectionId: connectionId,
