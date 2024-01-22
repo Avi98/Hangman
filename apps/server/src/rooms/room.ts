@@ -3,13 +3,15 @@ import { getAllLetters } from './utils';
 import { IUser } from './interface/user';
 
 class Room {
-  private alphabets = getAllLetters();
+  private static ALL_LETTERS = getAllLetters();
+
   private users = [];
   private roomName = '';
   private gameState = {
     owner: '',
     word: null,
-    remainingLetters: this.alphabets,
+    remainingLetters: [...Room.ALL_LETTERS],
+    letters: [...Room.ALL_LETTERS],
     selectedLetters: [],
     skip: 0,
     isCorrect: false,
