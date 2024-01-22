@@ -41,7 +41,9 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
     const isConnected = socket.getConnectionId();
 
     socketRef.current = socket;
-    if (!isConnected) connectToWebSocket();
+    if (isConnected) return;
+
+    connectToWebSocket();
 
     return () => {
       if (isConnected) disconnectConnection();
