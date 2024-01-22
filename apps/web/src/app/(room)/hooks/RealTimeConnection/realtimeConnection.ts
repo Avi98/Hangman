@@ -1,11 +1,11 @@
 import Socket, { Socket as SocketType } from "socket.io-client";
 import { getSocketBaseUrl } from "../utils";
-
-type MessageType = "new-user" | "message" | "new-word" | "key-pressed";
+import { EventType } from "../../../../../types";
 
 class RealTimeConnection {
   private socket?: SocketType;
   private clientId?: string;
+  private gameState?: unknown;
 
   private isConnected = false;
 
@@ -13,31 +13,59 @@ class RealTimeConnection {
     const socketUrl = getSocketBaseUrl();
     const socket: SocketType = Socket(socketUrl, { path: "/realtime" });
     console.log("Connection established");
+
     return socket;
   }
 
   private noConnectionFound(socket?: SocketType): asserts socket is SocketType {
-    if (!this.socket) throw new Error("Connection not found");
+    if (!socket) throw new Error("Connection not found");
   }
 
-  private asyncConnection = (): Promise<{
-    socket: SocketType;
-    clientId: string;
-    isConnected: boolean;
-  }> => {
+  private retryOnError() {
+    // @TODO: add retry logic here
+  }
+
+  private sendMessage<M>({ type, payload }: { type: EventType; payload: M }) {
+    this.noConnectionFound(this.socket);
+
+    this.socket.emit(type, payload);
+  }
+
+  private setGameState(gameState: unknown) {
+    this.gameState = gameState;
+  }
+
+  private attachEventListener(eventType: EventType) {
+    return new Promise((res) => {
+      setTimeout(() => {
+        this.socket?.on(eventType, res);
+      }, 0);
+    });
+  }
+
+  private joinRoom = (roomInfo: {
+    roomId: string;
+    roomName: string;
+  }): Promise<void> => {
     return new Promise((res, rej) => {
       const io = RealTimeConnection.connect();
 
-      setTimeout(() => {
-        io.on("connect", () => {
-          res({
-            socket: io,
-            clientId: io.id || "",
-            isConnected: true,
-          });
-        });
+      this.socket = io;
+      this.clientId = io.id;
+      this.isConnected = true;
 
-        io.on("error", (e) => {
+      setTimeout(() => {
+        this.socket?.emit("JOIN_ROOM", {
+          roomId: roomInfo.roomId,
+          roomName: roomInfo.roomName,
+        });
+        res();
+
+        io.on("JOIN_FAIL", (e) => {
+          this.socket = undefined;
+          this.clientId = "";
+          this.isConnected = false;
+
           // @TODO: add retry logic here
           rej({
             isConnected: false,
@@ -48,20 +76,19 @@ class RealTimeConnection {
     });
   };
 
-  async establishConnection() {
-    return await this.asyncConnection()
-      .then(({ socket, clientId, isConnected }) => {
-        this.socket = socket;
-        this.clientId = clientId;
-        this.isConnected = isConnected;
-      })
+  async establishConnection({
+    roomId,
+    roomName,
+  }: {
+    roomId: string;
+    roomName: string;
+  }) {
+    await this.joinRoom({ roomId, roomName })
+      .then(() => this.attachEventListener("JOIN_SUCCESS"))
+      .then(this.setGameState)
       .catch((e) => {
         console.error({ ERROR_CONNECTION: e });
       });
-  }
-
-  private retryOnError() {
-    // @TODO: add retry logic here
   }
 
   disconnect() {
@@ -71,16 +98,14 @@ class RealTimeConnection {
     this.socket.close();
   }
 
-  sendMessage<Message = {}>(type: MessageType, message: Message) {
-    this.noConnectionFound(this.socket);
-
-    this.socket.emit(type, message);
-  }
-
   getConnectionId() {
     if (!this.clientId) return null;
 
     return this.clientId;
+  }
+
+  letterSelected(letter: string) {
+    this.sendMessage({ type: "SELECTED_LETTER", payload: letter });
   }
 
   getIsConnected() {
