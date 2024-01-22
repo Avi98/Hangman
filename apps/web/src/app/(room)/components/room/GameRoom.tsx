@@ -1,6 +1,6 @@
 "use client";
 
-import { useRealTimeConnection } from "../../hooks/RealTimeConnection/useRealTimeConnection";
+import { useRealTimeConnection } from "../../hooks/use-real-time-connection/use-real-time-connection";
 import { Hangman } from "@repo/ui";
 
 export const GameRoom = () => {
@@ -25,10 +25,7 @@ export const GameRoom = () => {
       </select>
       <div>My score</div>
       <div>MY chance</div>
-      <button onClick={onKeyPressed}>
-        {" "}
-        send event to {`${currentConnectionId}`}
-      </button>
+
       <Hangman />
       <button>Skip my turn</button>
       <button>Skip my turn</button>

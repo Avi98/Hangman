@@ -1,22 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import RealTimeConnection from "./realtimeConnection";
+import RealTimeConnection from "./realtime-connection";
+import { assertSocketRef } from "../utils";
+import { SocketRefType } from "../types";
 
-interface IUseRealTimeConnection {
-  isConnected: boolean;
-  currentConnectionId: string | null;
-  onKeyPressed: () => void;
-}
-
-type SocketRefType = () => RealTimeConnection;
-
-function assertSocketRef(
-  socketRef: SocketRefType | RealTimeConnection
-): RealTimeConnection {
-  if (typeof socketRef === "function") return socketRef();
-  return socketRef;
-}
-
-export const useRealTimeConnection = (): IUseRealTimeConnection => {
+export const useInitializeConnection = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [connectionId, setConnectionId] = useState("");
 
@@ -26,7 +13,10 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
 
   const connectToWebSocket = useCallback(async () => {
     if (typeof socketRef.current !== "function") {
-      await socketRef.current.establishConnection();
+      await socketRef.current.establishConnection({
+        roomId: String(100),
+        roomName: "testRoom",
+      });
       setConnectionId(socketRef.current.getConnectionId() ?? "");
       setIsConnected(socketRef.current.getIsConnected());
     }
@@ -50,17 +40,5 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
     };
   }, [connectToWebSocket, disconnectConnection, setIsConnected]);
 
-  const sendMessageCb = useCallback(() => {
-    if (typeof socketRef.current !== "function")
-      return socketRef.current.sendMessage("key-pressed", {
-        data: "key_pressed event",
-      });
-  }, []);
-
-  console.log({ isConnected });
-  return {
-    isConnected,
-    currentConnectionId: connectionId,
-    onKeyPressed: sendMessageCb,
-  };
+  return { isConnected, connectionId, client: socketRef.current };
 };
