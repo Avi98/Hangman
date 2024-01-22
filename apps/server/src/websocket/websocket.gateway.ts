@@ -11,18 +11,19 @@ import { WordBankService } from '../word-bank/word-bank.service';
 
 @WebSocketGateway({
   //@TODO: extract this
-  cors: { origin: 'http://localhost:3001' },
+  cors: { origin: 'http://localhost:3000' },
   path: '/realtime',
+  // transports: ['websocket'],
 })
 export class SocketGateway implements OnGatewayConnection {
   constructor(private wordBank: WordBankService) {}
 
-  handleConnection(socket: Socket, requestMessage: IncomingMessage) {
-    const socketId = socket.id;
+  async handleConnection(client: Socket, requestMessage: IncomingMessage) {
+    const socketId = client.id;
     console.log('MessageTransporter');
     console.log(`New connecting... socket id:`, socketId);
 
-    RoomEventHandler.initializeRoomEventHandler(socket, this.wordBank);
+    await RoomEventHandler.initializeRoomEventHandler(client, this.wordBank);
   }
 
   handleDisconnect(socket: Socket): void {

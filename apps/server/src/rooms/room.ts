@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { getAllLetters } from './utils';
+import { IUser } from './interface/user';
 
 class Room {
   private alphabets = getAllLetters();
-  private liveUsers = [];
+  private users = [];
   private roomName = '';
   private gameState = {
     owner: '',
@@ -17,7 +18,7 @@ class Room {
   };
 
   getConnectedUsers() {
-    return this.liveUsers;
+    return this.users;
   }
 
   onSelectLetter() {}
@@ -27,8 +28,21 @@ class Room {
   setWord(word) {
     this.gameState.word = word;
   }
+
+  get word() {
+    return this.word;
+  }
+
+  get game() {
+    return this.gameState;
+  }
+
   setName(name: string) {
     this.roomName = name;
+  }
+
+  addUser(user: IUser) {
+    this.users.push(user);
   }
 }
 

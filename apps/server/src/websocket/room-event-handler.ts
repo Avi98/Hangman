@@ -17,23 +17,27 @@ export class RoomEventHandler {
     private gameStore: RealtimeRoomStore,
   ) {}
 
-  static initializeRoomEventHandler(client: Socket, wordBank: WordBankService) {
+  static async initializeRoomEventHandler(
+    client: Socket,
+    wordBank: WordBankService,
+  ) {
     const gameStore = new RealtimeRoomStore();
     const eventHandler = new RoomEventHandler(client, wordBank, gameStore);
 
-    eventHandler.addRoom();
-    eventHandler.letterSelected();
+    await eventHandler.addRoom();
+    // eventHandler.letterSelected();
   }
 
-  private addEventListener<C extends (...args: any[]) => void>(
-    eventName: EventType,
-    cb: C,
-  ) {
-    return this.client.on(eventName, cb);
-  }
+  private addEventListener = (eventName: EventType) => {
+    return new Promise((res) => {
+      setTimeout(() => {
+        this.client.on(eventName, res);
+      }, 0);
+    });
+  };
 
   private sendEvent<P>({ type, payload }: IEventType<P>) {
-    this.client.send(type, payload);
+    this.client.emit(type, payload);
   }
 
   private broadcastMessage<P>({ type, payload }: IEventType<P>) {
@@ -50,19 +54,25 @@ export class RoomEventHandler {
 
   async addRoom() {
     try {
-      const word = await this.fetchWord();
+      this.addEventListener('JOIN_ROOM').then(
+        async (roomInfo: { roomId: string; roomName: string }) => {
+          const word = await this.fetchWord();
 
-      this.addEventListener('JOIN_ROOM', ({ roomId, roomName }) => {
-        this.gameStore.createNewRoom({ roomId, word, roomName });
+          this.currentRoomId = roomInfo.roomId;
 
-        this.client.join(roomId);
-        this.currentRoomId = roomId;
+          this.gameStore.createNewRoom({
+            word,
+            roomId: roomInfo.roomId,
+            roomName: roomInfo.roomName,
+          });
 
-        this.sendEvent({
-          type: 'JOIN_SUCCESS',
-          payload: `${roomId} joined successfully`,
-        });
-      });
+          this.client.join(roomInfo.roomId);
+          this.sendEvent({
+            type: 'JOIN_SUCCESS',
+            payload: this.gameStore.getRoomMetadata(roomInfo.roomId),
+          });
+        },
+      );
     } catch (error) {
       //log error
       throw new Error(error);
@@ -70,11 +80,11 @@ export class RoomEventHandler {
   }
 
   async letterSelected() {
-    this.addEventListener('SELECTING_LETTER', (letter) => {
-      this.broadcastMessage({
-        type: 'SELECTED_LETTER',
-        payload: letter,
-      });
-    });
+    // this.addEventListener('SELECTING_LETTER', (letter) => {
+    //   this.broadcastMessage({
+    //     type: 'SELECTED_LETTER',
+    //     payload: letter,
+    //   });
+    // });
   }
 }
