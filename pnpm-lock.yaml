@@ -129,6 +129,21 @@ importers:
 
   apps/web:
     dependencies:
+      '@emotion/react':
+        specifier: ^11.11.3
+        version: 11.11.3(@types/react@18.2.46)(react@18.2.0)
+      '@emotion/styled':
+        specifier: ^11.11.0
+        version: 11.11.0(@emotion/react@11.11.3)(@types/react@18.2.46)(react@18.2.0)
+      '@fontsource/roboto':
+        specifier: ^5.0.8
+        version: 5.0.8
+      '@mui/material':
+        specifier: ^5.15.5
+        version: 5.15.5(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/material-nextjs':
+        specifier: ^5.15.6
+        version: 5.15.6(@mui/material@5.15.5)(@types/react@18.2.46)(next@14.0.4)(react@18.2.0)
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -225,6 +240,9 @@ importers:
       '@mui/material':
         specifier: ^5.15.5
         version: 5.15.5(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/material-nextjs':
+        specifier: ^5.15.6
+        version: 5.15.6(@mui/material@5.15.5)(@types/react@18.2.46)(next@14.0.4)(react@18.2.0)
       framer-motion:
         specifier: ^10.18.0
         version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
@@ -696,7 +714,7 @@ packages:
     resolution: {integrity: sha512-m4HEDZleaaCH+XgDDsPF15Ht6wTLsgDTeR3WYj9Q/k76JtWhrJjcP4+/XlG8LGT/Rol9qUfOIztXeA84ATpqPQ==}
     dependencies:
       '@babel/helper-module-imports': 7.22.15
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.8
       '@emotion/hash': 0.9.1
       '@emotion/memoize': 0.8.1
       '@emotion/serialize': 1.1.3
@@ -791,7 +809,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.8
       '@emotion/babel-plugin': 11.11.0
       '@emotion/is-prop-valid': 1.2.1
       '@emotion/react': 11.11.3(@types/react@18.2.46)(react@18.2.0)
@@ -885,6 +903,10 @@ packages:
 
   /@floating-ui/utils@0.2.1:
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
+    dev: false
+
+  /@fontsource/roboto@5.0.8:
+    resolution: {integrity: sha512-XxPltXs5R31D6UZeLIV1td3wTXU3jzd3f2DLsXI8tytMGBkIsGcc9sIyiupRtA8y73HAhuSCeweOoBqf6DbWCA==}
     dev: false
 
   /@humanwhocodes/config-array@0.11.13:
@@ -1242,6 +1264,30 @@ packages:
 
   /@mui/core-downloads-tracker@5.15.5:
     resolution: {integrity: sha512-VhT8klyXy8GrWrARqLMoM6Nzz809Jc3Wn5wd7WOZfre2vFO1rBV1dBANAPBhBqpaQI0HCMRTWEYoSyOFgRnz4A==}
+    dev: false
+
+  /@mui/material-nextjs@5.15.6(@mui/material@5.15.5)(@types/react@18.2.46)(next@14.0.4)(react@18.2.0):
+    resolution: {integrity: sha512-lVMstlHb1cWwdf3LeIxxa1wd2UiUCSRXdFVlopCiifhADFgNK3d05vDyDnwbOj82ZypPz+PxV8I53rp6MmeM3w==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@emotion/cache': ^11.11.0
+      '@emotion/server': ^11.11.0
+      '@mui/material': ^5.0.0
+      '@types/react': ^17.0.0 || ^18.0.0
+      next: ^13.0.0 || ^14.0.0
+      react: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/cache':
+        optional: true
+      '@emotion/server':
+        optional: true
+      '@types/react':
+        optional: true
+    dependencies:
+      '@mui/material': 5.15.5(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.2.46
+      next: 14.0.4(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /@mui/material@5.15.5(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0):
@@ -2892,7 +2938,7 @@ packages:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
     engines: {node: '>=10', npm: '>=6'}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.8
       cosmiconfig: 7.1.0
       resolve: 1.22.8
     dev: false
