@@ -1,8 +1,8 @@
 import {
+  MessageBody,
   OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
 } from '@nestjs/websockets';
 import { IncomingMessage } from 'http';
 import { Socket } from 'socket.io';
@@ -16,6 +16,8 @@ import { WordBankService } from '../word-bank/word-bank.service';
   // transports: ['websocket'],
 })
 export class SocketGateway implements OnGatewayConnection {
+  private eventHandler: RoomEventHandler;
+
   constructor(private wordBank: WordBankService) {}
 
   async handleConnection(client: Socket, requestMessage: IncomingMessage) {
@@ -23,11 +25,20 @@ export class SocketGateway implements OnGatewayConnection {
     console.log('MessageTransporter');
     console.log(`New connecting... socket id:`, socketId);
 
-    await RoomEventHandler.initializeRoomEventHandler(client, this.wordBank);
+    this.eventHandler = await RoomEventHandler.initializeRoomEventHandler(
+      client,
+      this.wordBank,
+    );
   }
 
   handleDisconnect(socket: Socket): void {
     const socketId = socket.id;
     console.log(`Disconnection... socket id:`, socketId);
+  }
+
+  @SubscribeMessage('SELECTING_LETTER')
+  handleLetterSelect(@MessageBody() data: { letter: string; roomId: string }) {
+    console.log({ checkListner: data });
+    this.eventHandler.letterSelected(data.letter, data.roomId);
   }
 }

@@ -6,6 +6,7 @@ import { EventType } from '../types/event-type';
 interface IEventType<P> {
   type: EventType;
   payload: P;
+  roomId?: string;
 }
 
 export class RoomEventHandler {
@@ -25,14 +26,12 @@ export class RoomEventHandler {
     const eventHandler = new RoomEventHandler(client, wordBank, gameStore);
 
     await eventHandler.addRoom();
-    // eventHandler.letterSelected();
+    return eventHandler;
   }
 
-  private addEventListener = (eventName: EventType) => {
+  private addEventListener = <P>(eventName: EventType): Promise<P> => {
     return new Promise((res) => {
-      setTimeout(() => {
-        this.client.on(eventName, res);
-      }, 0);
+      return this.client.on(eventName, (data) => res(data));
     });
   };
 
@@ -40,8 +39,8 @@ export class RoomEventHandler {
     this.client.emit(type, payload);
   }
 
-  private broadcastMessage<P>({ type, payload }: IEventType<P>) {
-    this.client.to(this.currentRoomId).emit(type, payload);
+  private async broadcastMessage<P>({ type, payload, roomId }: IEventType<P>) {
+    await new Promise((res, reg) => this.client.emit(type, payload, res));
   }
 
   private async fetchWord() {
@@ -52,7 +51,7 @@ export class RoomEventHandler {
     }
   }
 
-  async addRoom() {
+  private async addRoom() {
     try {
       this.addEventListener('JOIN_ROOM').then(
         async (roomInfo: { roomId: string; roomName: string }) => {
@@ -79,12 +78,11 @@ export class RoomEventHandler {
     }
   }
 
-  async letterSelected() {
-    // this.addEventListener('SELECTING_LETTER', (letter) => {
-    //   this.broadcastMessage({
-    //     type: 'SELECTED_LETTER',
-    //     payload: letter,
-    //   });
-    // });
+  async letterSelected(letter: string, roomId: string) {
+    return await this.broadcastMessage({
+      type: 'SELECTED_LETTER',
+      payload: letter,
+      roomId: roomId,
+    });
   }
 }
