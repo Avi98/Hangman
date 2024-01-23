@@ -5,6 +5,7 @@ import { EventType } from "../../../../../types";
 class RealTimeConnection {
   private socket?: SocketType;
   private clientId?: string;
+  private roomId?: string;
   private gameState?: unknown;
 
   private isConnected = false;
@@ -28,7 +29,7 @@ class RealTimeConnection {
   private sendMessage<M>({ type, payload }: { type: EventType; payload: M }) {
     this.noConnectionFound(this.socket);
 
-    this.socket.emit(type, payload);
+    return Promise.resolve(this.socket.emit(type, payload));
   }
 
   private setGameState(gameState: unknown) {
@@ -53,6 +54,7 @@ class RealTimeConnection {
       this.socket = io;
       this.clientId = io.id;
       this.isConnected = true;
+      this.roomId = roomInfo.roomId;
 
       setTimeout(() => {
         this.socket?.emit("JOIN_ROOM", {
@@ -104,8 +106,15 @@ class RealTimeConnection {
     return this.clientId;
   }
 
-  letterSelected(letter: string) {
-    this.sendMessage({ type: "SELECTED_LETTER", payload: letter });
+  async letterSelected(letter: string) {
+    await this.sendMessage({
+      type: "SELECTING_LETTER",
+      payload: { letter, roomId: this.roomId },
+    });
+
+    await this.attachEventListener("SELECTED_LETTER").then((letters) => {
+      console.log({ letters });
+    });
   }
 
   getIsConnected() {

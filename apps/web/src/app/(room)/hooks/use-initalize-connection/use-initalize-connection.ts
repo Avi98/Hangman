@@ -40,5 +40,16 @@ export const useInitializeConnection = () => {
     };
   }, [connectToWebSocket, disconnectConnection, setIsConnected]);
 
-  return { isConnected, connectionId, client: socketRef.current };
+  if (socketRef.current instanceof RealTimeConnection)
+    return {
+      isConnected,
+      connectionId,
+      client: socketRef.current as RealTimeConnection,
+    };
+
+  return {
+    isConnected: false,
+    connectionId: "",
+    client: null,
+  };
 };

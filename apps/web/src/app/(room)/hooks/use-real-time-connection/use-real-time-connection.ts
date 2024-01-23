@@ -1,18 +1,23 @@
 import { useCallback } from "react";
 import { useInitializeConnection } from "../use-initalize-connection";
+import { useHangmanStore } from "../../../../store/use-hangman-store";
+import RealTimeConnection from "../use-initalize-connection/realtime-connection";
 
 interface IUseRealTimeConnection {
   isConnected: boolean;
   currentConnectionId: string | null;
-  onKeyPressed: (letter: string) => void;
+  selectedLetters: (letter: string) => Promise<void>;
 }
 
 export const useRealTimeConnection = (): IUseRealTimeConnection => {
   const { client, isConnected, connectionId } = useInitializeConnection();
 
-  const sendMessageCb = useCallback(
-    (letter: string) => {
-      if (typeof client !== "function") return client.letterSelected(letter);
+  const { updateSelectedLetters } = useHangmanStore((state) => state);
+
+  const selectedLetters = useCallback(
+    async (letter: string) => {
+      console.log({ client });
+      await client?.letterSelected(letter);
     },
     [client]
   );
@@ -20,6 +25,6 @@ export const useRealTimeConnection = (): IUseRealTimeConnection => {
   return {
     isConnected,
     currentConnectionId: connectionId,
-    onKeyPressed: sendMessageCb,
+    selectedLetters,
   };
 };

@@ -5,9 +5,12 @@ import { Hangman } from "@repo/ui";
 
 export const GameRoom = () => {
   // const a = useGetCurrentUser();
-  const { isConnected, currentConnectionId, onKeyPressed } =
+  const { isConnected, currentConnectionId, selectedLetters } =
     useRealTimeConnection();
 
+  const handleEvent = () => {
+    selectedLetters("s");
+  };
   return (
     <div>
       <div>
@@ -26,9 +29,8 @@ export const GameRoom = () => {
       <div>My score</div>
       <div>MY chance</div>
 
-      <Hangman />
-      <button>Skip my turn</button>
-      <button>Skip my turn</button>
+      {/* <Hangman /> */}
+      <button onClick={handleEvent}>Key press</button>
     </div>
   );
 };
