@@ -1,7 +1,6 @@
 "use client";
 
 import { useRealTimeConnection } from "../../hooks/use-real-time-connection/use-real-time-connection";
-import { Hangman } from "@repo/ui";
 
 export const GameRoom = () => {
   // const a = useGetCurrentUser();
@@ -13,7 +12,7 @@ export const GameRoom = () => {
   };
   return (
     <div>
-      <div>
+      {/* <div>
         connect: {isConnected ? "true" : "false"} to {`${currentConnectionId}`}
       </div>
       <div>Name:??</div>
@@ -27,9 +26,8 @@ export const GameRoom = () => {
         <option>??</option>
       </select>
       <div>My score</div>
-      <div>MY chance</div>
+      <div>MY chance</div> */}
 
-      {/* <Hangman /> */}
       <button onClick={handleEvent}>Key press</button>
     </div>
   );

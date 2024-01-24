@@ -1,5 +1,6 @@
+import { AllLetters } from "../../components/letters/Keys";
 import { GameRoom } from "../../components/room";
-
+import { Title, Hangman, Card, Stack } from "@repo/ui";
 interface IRoom {
   params: {
     roomId: string;
@@ -8,10 +9,21 @@ interface IRoom {
 
 const Room = (props: IRoom) => {
   return (
-    <div style={{ width: "400px", height: "400px" }}>
-      room id:{`${props.params.roomId}`}
+    <Stack alignItems={"center"} mt="5rem">
+      <Title>Hangman</Title>
+      <Card
+        sx={{
+          width: "19%",
+          height: "19%",
+          padding: "5rem",
+          margin: "4rem",
+        }}
+      >
+        <Hangman />
+        <AllLetters />
+      </Card>
       <GameRoom />
-    </div>
+    </Stack>
   );
 };
 
