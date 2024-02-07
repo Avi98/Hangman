@@ -7,5 +7,5 @@ export const useGetGameState = (client: RealTimeConnection) => {
 
   useEffect(() => {
     if (!(client instanceof RealTimeConnection)) return;
-  }, []);
+  }, [client]);
 };

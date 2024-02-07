@@ -1,3 +1,5 @@
+"use client";
+
 import { type PaperProps } from "@mui/material/Paper";
 import { ReactNode } from "react";
 import { StyledPaper } from "./style";

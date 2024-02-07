@@ -20,6 +20,17 @@ const Room = (props: IRoom) => {
         }}
       >
         <Hangman />
+      </Card>
+
+      <Card
+        sx={{
+          // width: "19%",
+          height: "19%",
+          padding: "1rem",
+          alignItems: "center",
+          // margin: "4rem",
+        }}
+      >
         <AllLetters />
       </Card>
       <GameRoom />
