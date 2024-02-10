@@ -38,7 +38,6 @@ export class SocketGateway implements OnGatewayConnection {
 
   @SubscribeMessage('SELECTING_LETTER')
   handleLetterSelect(@MessageBody() data: { letter: string; roomId: string }) {
-    console.log({ checkListner: data });
     this.eventHandler.letterSelected(data.letter, data.roomId);
   }
 }
