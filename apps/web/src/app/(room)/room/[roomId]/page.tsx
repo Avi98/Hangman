@@ -24,11 +24,9 @@ const Room = (props: IRoom) => {
 
       <Card
         sx={{
-          // width: "19%",
           height: "19%",
           padding: "1rem",
           alignItems: "center",
-          // margin: "4rem",
         }}
       >
         <AllLetters />

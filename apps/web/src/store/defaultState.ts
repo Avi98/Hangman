@@ -1,18 +1,26 @@
+import { ExtractType } from "./utility/expandType";
+
 const defaultState = {
   isConnected: false,
   currRoom: {
     roomName: "",
     currUser: {},
-    allUsers: [] as any[],
+    allUsers: [
+      {
+        name: "",
+        userId: "",
+      },
+    ],
   },
-
   gameState: {
     owner: {},
+    remainingLetters: [""],
     isChoosing: false,
     guessWord: "",
     myTurn: false,
-    remainingLetters: [],
-    selectedLetters: [],
+    selectedLetters: [""],
+    correctSelectedLetters: [""],
+    wrongSelectedLetters: [""],
     turn: {
       name: "",
     },
@@ -22,5 +30,5 @@ const defaultState = {
   },
 } as const;
 
-export type Store = typeof defaultState;
+export type Store = ExtractType<typeof defaultState>;
 export default defaultState;
