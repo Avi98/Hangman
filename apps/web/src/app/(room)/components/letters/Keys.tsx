@@ -15,6 +15,7 @@ export const AllLetters = () => {
     <KeysWrapper>
       {letters.slice(0, 20).map((l) => (
         <Keys
+          key={l}
           letter={l}
           onClick={updatedSelectedLetters}
           isRightLetter={false}
@@ -24,6 +25,7 @@ export const AllLetters = () => {
       <LastRow />
       {letters.slice(-6).map((letter) => (
         <Keys
+          key={letter}
           letter={letter}
           onClick={updatedSelectedLetters}
           isRightLetter={correctSelectedLetters.includes(

@@ -29,7 +29,7 @@ class RealTimeConnection {
   private sendMessage<M>({ type, payload }: { type: EventType; payload: M }) {
     this.noConnectionFound(this.socket);
 
-    return Promise.resolve(this.socket.emit(type, payload));
+    return this.socket.emit(type, payload);
   }
 
   private setGameState(gameState: unknown) {
@@ -78,6 +78,9 @@ class RealTimeConnection {
     });
   };
 
+  async updateGameState(payload: any) {
+    console.log({ event: "SELECTING_LETTER", payload });
+  }
   async establishConnection({
     roomId,
     roomName,
@@ -91,6 +94,12 @@ class RealTimeConnection {
       .catch((e) => {
         console.error({ ERROR_CONNECTION: e });
       });
+  }
+
+  async listenLetterSelect() {
+    await this.attachEventListener("SELECTED_LETTER").then(
+      this.updateGameState
+    );
   }
 
   disconnect() {
@@ -107,12 +116,12 @@ class RealTimeConnection {
   }
 
   async letterSelected(letter: string) {
-    await this.sendMessage({
+    this.sendMessage({
       type: "SELECTING_LETTER",
       payload: { letter, roomId: this.roomId },
     });
 
-    await this.attachEventListener("SELECTED_LETTER").then((letters) => {
+    this.attachEventListener("SELECTED_LETTER").then((letters) => {
       console.log({ letters });
     });
   }

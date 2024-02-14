@@ -22,6 +22,11 @@ export const useInitializeConnection = () => {
     }
   }, []);
 
+  const attachListener = useCallback(async () => {
+    if (typeof socketRef.current !== "function")
+      await socketRef.current.listenLetterSelect();
+  }, []);
+
   const disconnectConnection = useCallback(() => {
     if (typeof socketRef.current !== "function") socketRef.current.disconnect();
   }, []);
@@ -39,6 +44,10 @@ export const useInitializeConnection = () => {
       if (isConnected) disconnectConnection();
     };
   }, [connectToWebSocket, disconnectConnection, setIsConnected]);
+
+  useEffect(() => {
+    attachListener();
+  }, [attachListener]);
 
   if (socketRef.current instanceof RealTimeConnection)
     return {

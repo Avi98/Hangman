@@ -18,11 +18,11 @@ export const useHangmanStore = create<HangmanStoreType>((set) => ({
       },
     })),
 
-  setGameState: (gameState: Store["gameState"]) =>
-    set((state: Store) => ({
-      ...state,
-      gameState,
-    })),
+  // setGameState: (gameState: Store["gameState"]) =>
+  //   set((state: Store) => ({
+  //     ...state,
+  //     gameState,
+  //   })),
 
   updateSelectedLetters: (updateSelectedLetters: string[]) =>
     set((state: Store) => ({
