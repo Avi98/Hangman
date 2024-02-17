@@ -38,6 +38,6 @@ export class SocketGateway implements OnGatewayConnection {
 
   @SubscribeMessage('SELECTING_LETTER')
   handleLetterSelect(@MessageBody() data: { letter: string; roomId: string }) {
-    this.eventHandler.letterSelected(data.letter, data.roomId);
+    this.eventHandler.letterSelected(data.roomId, data.letter);
   }
 }

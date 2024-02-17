@@ -28,7 +28,7 @@ const defaultState = {
     incorrect: 0,
     gameOver: false,
   },
-} as const;
+};
 
 export type Store = ExtractType<typeof defaultState>;
 export default defaultState;

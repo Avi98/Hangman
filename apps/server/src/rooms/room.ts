@@ -4,6 +4,7 @@ import { IUser } from './interface/user';
 
 class Room {
   private static ALL_LETTERS = getAllLetters();
+  private static MAX_CHANCE = 5;
 
   private users = [];
   private roomName = '';
@@ -23,7 +24,21 @@ class Room {
     return this.users;
   }
 
-  onSelectLetter() {}
+  onSelectLetter(letter: string) {
+    if (this.gameState.gameOver) throw new Error('Game Over');
+
+    if (this.gameState.incorrect === Room.MAX_CHANCE)
+      throw new Error('Reached max chances Game Over');
+
+    const gameLetters = this.gameState.letters;
+
+    this.gameState.selectedLetters.push(letter);
+    this.gameState.letters = gameLetters.filter(
+      (letters) => letters !== letter,
+    );
+
+    return this.gameState;
+  }
 
   whoseTurn() {}
 

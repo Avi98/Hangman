@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import { WordBankService } from '../word-bank/word-bank.service';
-import RealtimeRoomStore from '../rooms/realtimeRoomStore';
+import RealtimeRoomStore from 'src/rooms/RealtimeRoomStore';
 import { EventType } from '../types/event-type';
 
 interface IEventType<P> {
@@ -15,7 +15,7 @@ export class RoomEventHandler {
   constructor(
     private client: Socket,
     private wordBank: WordBankService,
-    private gameStore: RealtimeRoomStore,
+    private realtimeRoom: RealtimeRoomStore,
   ) {}
 
   static async initializeRoomEventHandler(
@@ -59,7 +59,7 @@ export class RoomEventHandler {
 
           this.currentRoomId = roomInfo.roomId;
 
-          this.gameStore.createNewRoom({
+          this.realtimeRoom.createNewRoom({
             word,
             roomId: roomInfo.roomId,
             roomName: roomInfo.roomName,
@@ -68,7 +68,7 @@ export class RoomEventHandler {
           this.client.join(roomInfo.roomId);
           this.sendEvent({
             type: 'JOIN_SUCCESS',
-            payload: this.gameStore.getRoomMetadata(roomInfo.roomId),
+            payload: this.realtimeRoom.getRoomMetadata(roomInfo.roomId),
           });
         },
       );
@@ -78,10 +78,15 @@ export class RoomEventHandler {
     }
   }
 
-  async letterSelected(letter: string, roomId: string) {
-    return await this.broadcastMessage({
+  private updateGameRoom(roomId: string, letter: string) {
+    return this.realtimeRoom.letterSelected(roomId, letter);
+  }
+
+  async letterSelected(roomId: string, letter: string) {
+    const gameState = this.updateGameRoom(roomId, letter);
+    await this.broadcastMessage({
       type: 'SELECTED_LETTER',
-      payload: letter,
+      payload: gameState,
       roomId: roomId,
     });
   }

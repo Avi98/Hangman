@@ -1,11 +1,12 @@
-import { Inject } from '@nestjs/common';
 import Room from './room';
-import { generateUUID } from './utils';
-import { WordBankService } from '../word-bank/word-bank.service';
 import { IUser } from './interface/user';
 
 class RealtimeRoomStore {
   private room = new Map<string, Room>();
+
+  getRoomById(roomId: string) {
+    return this.room.get(roomId);
+  }
 
   createNewRoom(room: { roomId: string; word: string; roomName: string }) {
     try {
@@ -16,6 +17,7 @@ class RealtimeRoomStore {
       newRoom.setName(room.roomName);
 
       this.room.set(room.roomId, newRoom);
+      console.log({ room: this.room });
     } catch (error) {
       throw new Error('Failed to create room');
     }
@@ -49,6 +51,19 @@ class RealtimeRoomStore {
       // word: currentRoom.word,
       hangman: currentRoom.game,
     };
+  }
+
+  letterSelected(roomId: string, letter: string) {
+    try {
+      console.log({ roomId, letter, room: this.room });
+
+      const currRoom = this.getRoomById(roomId);
+      if (!currRoom) throw new Error('No room found');
+
+      return currRoom.onSelectLetter(letter);
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
