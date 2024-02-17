@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io';
 import { WordBankService } from '../word-bank/word-bank.service';
-import RealtimeRoomStore from 'src/rooms/RealtimeRoomStore';
 import { EventType } from '../types/event-type';
+import RealtimeRoomStore from '../rooms/realtimeRoomStore';
 
 interface IEventType<P> {
   type: EventType;
