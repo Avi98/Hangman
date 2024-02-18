@@ -6,53 +6,43 @@ FROM docker.io/node:20-alpine@sha256:2f46fd49c767554c089a5eb219115313b72748d8f62
 RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--"]
 
-
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-
 
 RUN corepack enable
 RUN pnpm add -g turbo
 
-# USER node
+## Stage 1: step build
+FROM base as step
+
 WORKDIR /usr/src/app
 
 COPY . .
 RUN turbo prune server --docker
 
-## Stage 1: step build
-FROM base as step
-
-# USER node
-WORKDIR /usr/src/app
-
-# COPY --chown=node --from=base /usr/src/app/.gitignore .gitignore
-# COPY --chown=node --from=base /usr/src/app/out/full/ .
-# COPY --chown=node --from=base /usr/src/app/out/json/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY  --from=base /usr/src/app/out/full/ .
-COPY  --from=base /usr/src/app/out/json/pnpm-lock.yaml ./pnpm-lock.yaml
-
 ## Stage 2: instal all the dependecies 
 FROM step as installer
+WORKDIR /usr/src/app
 
 RUN pnpm install --filter=server
 
+## Stage 3: build server application
 FROM installer as builder 
+WORKDIR /usr/src/app
 
 RUN pnpm turbo build --filter=server
 RUN pnpm --filter=server deploy --prod --ignore-scripts ./final-out
 
-## Stage 3: runner
-FROM builder as runner
+## Stage 3: run application
+FROM base as runner
 
-# USER node
 WORKDIR /usr/src/app
 
 ENV NODE_ENV=production
 
-COPY  --from=builder /usr/src/app/final-out/dist ./dist
-COPY  --from=builder /usr/src/app/final-out/node_modules ./node_modules
-COPY  --from=builder /usr/src/app/final-out/package.json ./dist/package.json
+COPY  --from=builder /usr/src/app/final-out/dist  dist
+COPY  --from=builder /usr/src/app/final-out/node_modules node_modules 
+COPY  --from=builder /usr/src/app/final-out/package.json package.json
 
 CMD [ "node", "dist/main.js" ]
 
