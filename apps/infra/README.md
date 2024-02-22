@@ -1,14 +1,18 @@
-# Welcome to your CDK TypeScript project
+# Infrastructure for AWS.
 
-This is a blank project for CDK development with TypeScript.
+This is the basic app for creating AWS infra use AWS CDK
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Important thing to note `AWS CLI` should be configured. Verify `AWS CLI` before making any api call using
 
-## Useful commands
+```shell
+aws --profile [profile-name] sts get-caller-identity --query "Account" --output json
+```
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+If the `AWS CLI` is configured. Output should be returned
+
+## AWS CDK
+
+1. `CDK --profile [name] synth` will generate cloudformation template.
+1. `CDK --profile [name] diff` will generate cloudformation template diff.
+1. `CDK --profile [name] deploy` will push cloudformation template to aws cloud.
+1. `CDK --profile [name] destroy` will delete cloudformation template.
