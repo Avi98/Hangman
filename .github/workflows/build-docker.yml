@@ -49,7 +49,7 @@ jobs:
           docker build -f "./apps/server/Dockerfile" .
           IMAGE_ID=$(docker images -q | head -n 1)
           docker tag $IMAGE_ID my-image:custom-tag
-        #   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
 #       - name: Build and push frontend image to ECR
 #         env:
