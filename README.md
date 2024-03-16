@@ -27,3 +27,7 @@
 1. Socket.io
 2. Nest.js
 3. typeOrm
+
+- _Infra_
+
+1. aws
