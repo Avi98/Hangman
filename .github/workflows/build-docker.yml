@@ -42,14 +42,13 @@ jobs:
 
       - name: Build and push backend image to ECR
         env:
-          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ secrets.AWS_NEST_IMAGE_TAG }}
         run: |
           docker build -f "./apps/server/Dockerfile" .
           IMAGE_ID=$(docker images -q | head -n 1)
-          docker tag $IMAGE_ID my-image:custom-tag
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $IMAGE_ID $ECR_REPOSITORY/$IMAGE_TAG
+          docker push $ECR_REPOSITORY/$IMAGE_TAG
 
 #       - name: Build and push frontend image to ECR
 #         env:
