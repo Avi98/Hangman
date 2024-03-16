@@ -23,9 +23,9 @@ jobs:
         uses: actions/checkout@v2
       - shell: bash
         env:
-          aws-env: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          echo "envs are $aws-env"
+          echo "envs are $aws"
 
       - name: configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
