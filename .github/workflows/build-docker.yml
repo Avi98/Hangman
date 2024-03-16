@@ -45,9 +45,8 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ secrets.AWS_NEST_IMAGE_TAG }}
         run: |
-          docker build -f "./apps/server/Dockerfile" .
-          IMAGE_ID=$(docker images -q | head -n 1)
-          docker tag $IMAGE_ID $ECR_REPOSITORY/$IMAGE_TAG
+          docker build -f "./apps/server/Dockerfile" -t hangman . 
+          docker tag hangman:latest $ECR_REPOSITORY/hangman-BE:latest
           docker push $ECR_REPOSITORY/$IMAGE_TAG
 
 #       - name: Build and push frontend image to ECR
