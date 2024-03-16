@@ -4,8 +4,7 @@ import { useRealTimeConnection } from "../../hooks/use-real-time-connection/use-
 
 export const GameRoom = () => {
   // const a = useGetCurrentUser();
-  const { isConnected, currentConnectionId, selectedLetters } =
-    useRealTimeConnection();
+  const { currentConnectionId, selectedLetters } = useRealTimeConnection();
 
   const handleEvent = () => {
     selectedLetters("s");
