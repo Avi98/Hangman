@@ -38,6 +38,8 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+env
+aws.secrets
 
 # AWS-CDK
 *.js
