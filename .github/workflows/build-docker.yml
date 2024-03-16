@@ -6,12 +6,11 @@ name: Build-images
 # 3. only run jobs if file has changed
 # 4. ignore change in infra repo
 
-# on:
-#   pull_request:
-#     branches:
-#       - develop
-#       - master
-on: push
+on:
+  push:
+    branches:
+      - develop
+      - master
 
 jobs:
   build-image:
@@ -44,8 +43,7 @@ jobs:
         env:
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
         run: |
-          docker build -f "./apps/server/Dockerfile" -t hangman-server:latest . 
-          docker tag hangman-server:latest $ECR_REPOSITORY/hangman:server
+          docker build -f "./apps/server/Dockerfile" -t $ECR_REPOSITORY/hangman:server . 
           docker push $ECR_REPOSITORY/hangman:server
 
       - name: Build and push frontend image to ECR
