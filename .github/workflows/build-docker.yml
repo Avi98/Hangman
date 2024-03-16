@@ -17,6 +17,7 @@ jobs:
   build-image:
     name: build frontend docker images
     runs-on: ubuntu-latest
+    environment: AWS
 
     steps:
       - name: checkout code
