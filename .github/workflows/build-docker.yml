@@ -30,6 +30,12 @@ jobs:
           aws-region: ap-southeast-2
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
+      - shell: bash
+        env:
+          aws-env: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          echo "envs are $aws-env"
+
       - name: Login to ECR
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
