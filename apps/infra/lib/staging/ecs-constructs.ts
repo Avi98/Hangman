@@ -51,6 +51,7 @@ export const ecsFargateService = (scope: Construct, vpc: Vpc) => {
     desiredCount: 1,
     taskDefinition: taskDefinition(scope),
     securityGroups: [fullAccessSG],
+    assignPublicIp: true,
   });
 
   return fargateService;
