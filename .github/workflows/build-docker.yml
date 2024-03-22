@@ -24,20 +24,12 @@ jobs:
     steps:
       - name: checkout code
         uses: actions/checkout@v2
-      - shell: bash
-        env:
-          aws: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          echo "envs are $aws"
 
-      - name: configure AWS credentials
+      - name: login to aws
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          role-to-assume: df
-          # aws-region: us-east-1
-          # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          role-to-assume: ${{ secrets.AWS_SECRET_ROLE }}
+          aws-region: ${{ secrets.AWS_SECRET_REGION }}
 
       - name: Login to ECR
         id: ecr-login
