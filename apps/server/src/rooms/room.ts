@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { getAllLetters } from './utils';
 import { IUser } from './interface/user';
+import { IGameStore } from '../interface/GameStoreRes';
 
 class Room {
   private static ALL_LETTERS = getAllLetters();
@@ -8,7 +9,7 @@ class Room {
 
   private users = [];
   private roomName = '';
-  private gameState = {
+  private gameState: IGameStore = {
     owner: '',
     word: null,
     remainingLetters: [...Room.ALL_LETTERS],

@@ -17,7 +17,6 @@ class RealtimeRoomStore {
       newRoom.setName(room.roomName);
 
       this.room.set(room.roomId, newRoom);
-      console.log({ room: this.room });
     } catch (error) {
       throw new Error('Failed to create room');
     }

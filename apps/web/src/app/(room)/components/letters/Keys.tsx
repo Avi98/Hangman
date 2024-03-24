@@ -11,6 +11,7 @@ export const AllLetters = () => {
     selectedLetters: updatedSelectedLetters,
     gameState: { correctSelectedLetters, wrongSelectedLetters },
   } = useRealTimeConnection();
+
   return (
     <KeysWrapper>
       {letters.slice(0, 20).map((l) => (

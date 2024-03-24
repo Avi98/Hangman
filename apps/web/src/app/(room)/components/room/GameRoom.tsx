@@ -6,9 +6,6 @@ export const GameRoom = () => {
   // const a = useGetCurrentUser();
   const { currentConnectionId, selectedLetters } = useRealTimeConnection();
 
-  const handleEvent = () => {
-    selectedLetters("s");
-  };
   return (
     <div>
       {/* <div>
@@ -27,7 +24,7 @@ export const GameRoom = () => {
       <div>My score</div>
       <div>MY chance</div> */}
 
-      <button onClick={handleEvent}>Key press</button>
+      {/* <button onClick={handleEvent}>Key press</button> */}
     </div>
   );
 };

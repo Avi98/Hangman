@@ -78,12 +78,8 @@ export class RoomEventHandler {
     }
   }
 
-  private updateGameRoom(roomId: string, letter: string) {
-    return this.realtimeRoom.letterSelected(roomId, letter);
-  }
-
   async letterSelected(roomId: string, letter: string) {
-    const gameState = this.updateGameRoom(roomId, letter);
+    const gameState = this.realtimeRoom.letterSelected(roomId, letter);
     await this.broadcastMessage({
       type: 'SELECTED_LETTER',
       payload: gameState,

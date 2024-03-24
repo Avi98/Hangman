@@ -1,6 +1,7 @@
 import Socket, { Socket as SocketType } from "socket.io-client";
 import { getSocketBaseUrl } from "../utils";
 import { EventType } from "../../../../../types";
+import { IGameResponse } from "../../../interface/GameStore";
 
 class RealTimeConnection {
   private socket?: SocketType;
@@ -13,7 +14,6 @@ class RealTimeConnection {
   private static connect(): SocketType {
     const socketUrl = getSocketBaseUrl();
     const socket: SocketType = Socket(socketUrl, { path: "/realtime" });
-    console.log("Connection established");
 
     return socket;
   }
@@ -36,7 +36,7 @@ class RealTimeConnection {
     this.gameState = gameState;
   }
 
-  private attachEventListener(eventType: EventType) {
+  private attachEventListener(eventType: EventType): Promise<IGameResponse> {
     return new Promise((res) => {
       setTimeout(() => {
         this.socket?.on(eventType, res);
@@ -81,6 +81,7 @@ class RealTimeConnection {
   async updateGameState(payload: any) {
     console.log({ event: "SELECTING_LETTER", payload });
   }
+
   async establishConnection({
     roomId,
     roomName,
@@ -96,10 +97,8 @@ class RealTimeConnection {
       });
   }
 
-  async listenLetterSelect() {
-    await this.attachEventListener("SELECTED_LETTER").then(
-      this.updateGameState
-    );
+  async listenLetterSelected() {
+    return await this.attachEventListener("SELECTED_LETTER");
   }
 
   disconnect() {
@@ -115,14 +114,10 @@ class RealTimeConnection {
     return this.clientId;
   }
 
-  async letterSelected(letter: string) {
+  letterSelected(letter: string) {
     this.sendMessage({
       type: "SELECTING_LETTER",
       payload: { letter, roomId: this.roomId },
-    });
-
-    this.attachEventListener("SELECTED_LETTER").then((letters) => {
-      console.log({ letters });
     });
   }
 
